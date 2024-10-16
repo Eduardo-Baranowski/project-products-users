@@ -19,17 +19,17 @@ export class UserController {
   constructor(private readonly usuariosService: UserService) {}
 
   @Public()
-  @Post('criar')
+  @Post('create')
   @ApiOperation({
     summary: 'Novo usuario',
-    description: 'Cria um novo usuario para o ',
+    description: 'Cria um novo usuario para o sistema',
   })
   @ApiBody({ type: CreateUserDto })
   create(@Body() createUserioDto: CreateUserDto) {
     return this.usuariosService.create(createUserioDto);
   }
 
-  @Get('listar')
+  @Get('list')
   findAll() {
     return this.usuariosService.findAll();
   }

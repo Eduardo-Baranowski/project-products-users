@@ -1,0 +1,41 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { CreateProductDto } from './dto/create-product.dto';
+import { ProductService } from './product.service';
+import { AuthGuard } from '@nestjs/passport';
+
+@Controller('product')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
+
+
+  @Post('create')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    summary: 'Novo produto',
+    description: 'Cria um novo produto para o sistema',
+  })
+  @ApiBody({ type: CreateProductDto })
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productService.create(createProductDto);
+  }
+
+  @Get('list')
+  @UseGuards(AuthGuard('jwt'))
+  findAll() {
+    return this.productService.findAll();
+  }
+
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('id') id: number, @Body() data: CreateProductDto) {
+    return this.productService.update(id, data);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Param('id') id: number) {
+    return this.productService.remove(id);
+  }
+}

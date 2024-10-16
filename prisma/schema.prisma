@@ -13,12 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  admin  @map("admin")
+  common @map("common")
+
+  @@map("roles")
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  cpf       String   @unique @map("cpf")
-  password  String   @map("password")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int       @id @default(autoincrement())
+  cpf       String    @unique @map("cpf")
+  password  String    @map("password")
+  role      Role      @default(common)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  Product   Product[]
 
   @@map("users")
 }
@@ -27,6 +36,9 @@ model Product {
   id          Int      @id @default(autoincrement())
   name        String   @map("name")
   description String   @map("description")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int      @map("user_id")
+  qty         Int      @map("qty")
   price       Float    @map("price")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
