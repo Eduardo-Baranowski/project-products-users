@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -29,13 +29,13 @@ export class ProductController {
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
-  async update(@Param('id') id: number, @Body() data: CreateProductDto) {
-    return this.productService.update(id, data);
+  async update(@Param('id') id: number, @Req() req, @Body() data: CreateProductDto) {
+    return this.productService.update(id, data, req.user.userId);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  remove(@Param('id') id: number) {
-    return this.productService.remove(id);
+  remove(@Param('id') id: number, @Req() req) {
+    return this.productService.remove(id, req.user.userId);
   }
 }

@@ -33,14 +33,24 @@ export class ProductService {
     return user;
   }
 
-  async update(id: number, data: CreateProductDto) {
-    const bookExists = await this.prisma.product.findUnique({
+  async update(id: number, data: CreateProductDto, idUser: number) {
+    const productExists = await this.prisma.product.findUnique({
       where: {
         id: Number(id),
       },
     });
 
-    if (!bookExists) {
+    const productBelongsUser = await this.prisma.user.findUnique({
+      where: {
+        id: Number(idUser),
+      },
+    });
+
+    if(Number(productExists.userId) !== Number(idUser) && productBelongsUser.role === 'common'){
+      throw new Error('propuct does not belongs to user!');
+    }
+
+    if (!productExists) {
       throw new Error('propuct does not exists!');
     }
 
@@ -52,14 +62,24 @@ export class ProductService {
     });
   }
 
-  async remove(id: number) {
-    const bookExists = await this.prisma.product.findUnique({
+  async remove(id: number, idUser: number) {
+    const productExists = await this.prisma.product.findUnique({
       where: {
         id: Number(id),
       },
     });
 
-    if (!bookExists) {
+    const productBelongsUser = await this.prisma.user.findUnique({
+      where: {
+        id: Number(idUser),
+      },
+    });
+
+    if(Number(productExists.userId) !== Number(idUser) && productBelongsUser.role === 'common'){
+      throw new Error('propuct does not belongs to user!');
+    }
+
+    if (!productExists) {
       throw new Error('propuct does not exists!');
     }
 
