@@ -8,7 +8,7 @@ export class ProductService {
     private prisma: PrismaService
   ) { }
 
-  async create(data: CreateProductDto) {
+  async create(data: CreateProductDto, idUser: number) {
     const products = this.prisma.product.create({
       data: {
         name: data.name,
@@ -16,7 +16,7 @@ export class ProductService {
         price: data.price,
         qty: data.qty,
         user: {
-          connect: { id: data.user_id }
+          connect: { id: idUser }
         }
       }
     });

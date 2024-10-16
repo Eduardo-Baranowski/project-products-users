@@ -17,8 +17,8 @@ export class ProductController {
     description: 'Cria um novo produto para o sistema',
   })
   @ApiBody({ type: CreateProductDto })
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  create(@Req() req, @Body() createProductDto: CreateProductDto) {
+    return this.productService.create(createProductDto, req.user.userId);
   }
 
   @Get('list')
