@@ -28,7 +28,6 @@ export class ProductController {
   })
   @ApiBody({ type: CreateProductDto })
   create(@Req() req, @Body() createProductDto: CreateProductDto) {
-    console.log(req.headers);
     return this.productService.create(createProductDto, req.user.userId);
   }
 
