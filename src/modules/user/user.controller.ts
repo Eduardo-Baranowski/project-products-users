@@ -30,15 +30,4 @@ export class UserController {
   findAll() {
     return this.usuariosService.findAll();
   }
-
-  @Public()
-  @Post('login')
-  @ApiOperation({
-    summary: 'Login user',
-    description: 'Signin user in the system',
-  })
-  login(@Body() body: IRequestLoginUser) {
-    const { cpf, password } = body;
-    return this.usuariosService.login(cpf, password);
-  }
 }
