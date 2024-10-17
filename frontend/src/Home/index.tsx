@@ -6,7 +6,12 @@ import { TrashIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
 import { formatDate, money } from '../utils';
 import Header from '../components/Header';
 import { Footer } from '../components/Footer';
+import Modal from '../components/Modal';
 const { Column, HeaderCell, Cell } = Table;
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { ContainerForm, HelperText } from './styles';
 
 type IProductProps = {
   id: string;
@@ -18,11 +23,28 @@ type IProductProps = {
   createdAt: Date;
 };
 
+const schema = yup.object().shape({
+  name: yup.string().required('Por  favor, digite o nome do produto!'),
+  price: yup.string().required('Por  favor, digite o valor do produto!'),
+  qty: yup.string().required('Por  favor, digite a quantidade!'),
+  createdAt: yup.string().required('Por  favor, forneça a data de cadastro!'),
+});
+
 const Home: React.FC = () => {
   const [limit, setLimit] = React.useState(10);
   const [page, setPage] = React.useState(1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const atualizar = async () => {
     let complete = false;
@@ -40,6 +62,24 @@ const Home: React.FC = () => {
         }
       });
   };
+
+  const onSubmitHandler = handleSubmit(async (data: any) => {
+    try {
+      await api.post('/product/create', {
+        name: data.name,
+        description: data.name,
+        price: Number(data.price),
+        qty: Number(data.qty),
+        createdAt: data.createdAt,
+      });
+      reset();
+      setOpen(false);
+      atualizar();
+      console.log('Login realizado com sucesso');
+    } catch (error) {
+      console.log('Não foi possível realizar o login');
+    }
+  });
 
   const handleChangeLimit = (dataKey: number) => {
     setPage(1);
@@ -70,6 +110,7 @@ const Home: React.FC = () => {
           <Button
             style={{ backgroundColor: '#2c7474', color: '#fff' }}
             startIcon={<PlusIcon color="#fff" />}
+            onClick={() => setOpen(true)}
           >
             Cadastrar Produto
           </Button>
@@ -162,6 +203,100 @@ const Home: React.FC = () => {
           />
         </div>
       </div>
+      <Modal
+        open={open}
+        titleButton="Cadastrar"
+        title="Cadastrar novo produto"
+        onClose={() => setOpen(false)}
+        onPress={onSubmitHandler}
+      >
+        <ContainerForm>
+          <form onSubmit={onSubmitHandler}>
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">Login</h2>
+
+              <div className="col-span-full">
+                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                  Nome
+                </label>
+                <div className="mt-2">
+                  <input
+                    {...register('name', { required: true })}
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                  {errors.name?.message && (
+                    <HelperText type="error">{errors.name?.message}</HelperText>
+                  )}
+                </div>
+              </div>
+              <div className="col-span-full">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Preço
+                </label>
+                <div className="mt-2">
+                  <input
+                    {...register('price', { required: true })}
+                    id="price"
+                    name="price"
+                    type="text"
+                    autoComplete="price"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                  {errors.price?.message && (
+                    <HelperText type="error">{errors.price?.message}</HelperText>
+                  )}
+                </div>
+              </div>
+              <div className="col-span-full">
+                <label htmlFor="qty" className="block text-sm font-medium leading-6 text-gray-900">
+                  Quantidade
+                </label>
+                <div className="mt-2">
+                  <input
+                    {...register('qty', { required: true })}
+                    id="qty"
+                    name="qty"
+                    type="text"
+                    autoComplete="qty"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                  {errors.qty?.message && (
+                    <HelperText type="error">{errors.qty?.message}</HelperText>
+                  )}
+                </div>
+              </div>
+              <div className="col-span-full">
+                <label
+                  htmlFor="createdAt"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Data de Cadastro
+                </label>
+                <div className="mt-2">
+                  <input
+                    {...register('createdAt', { required: true })}
+                    id="createdAt"
+                    name="createdAt"
+                    type="text"
+                    autoComplete="createdAt"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                  {errors.createdAt?.message && (
+                    <HelperText type="error">{errors.createdAt?.message}</HelperText>
+                  )}
+                </div>
+              </div>
+            </div>
+          </form>
+        </ContainerForm>
+      </Modal>
       <Footer />
     </>
   );
