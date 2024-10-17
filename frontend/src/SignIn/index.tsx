@@ -1,12 +1,45 @@
 import React from 'react';
-import { Container, ContainerForm, ContainerTxai } from './styles';
+import { Container, ContainerForm, ContainerTxai, HelperText } from './styles';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useAuth } from '../hooks/auth';
+
+const schema = yup.object().shape({
+  cpf: yup.string().required('Por  favor, digite o CPF do usuário!'),
+  password: yup.string().required('Por  favor, digite a senha do usuário!'),
+});
 
 const SignIn: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const { signIn } = useAuth();
+
+  const onSubmitHandler = handleSubmit(async (data: any) => {
+    try {
+      await signIn({
+        cpf: data.cpf,
+        password: data.password,
+      });
+      window.location.pathname = '/home';
+      reset();
+      console.log('Login realizado com sucesso');
+    } catch (error) {
+      console.log('Não foi possível realizar o login');
+    }
+  });
+
   return (
     <Container>
       <ContainerTxai></ContainerTxai>
       <ContainerForm>
-        <form>
+        <form onSubmit={onSubmitHandler}>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
             <h2 className="text-base font-semibold leading-7 text-gray-900">Login</h2>
 
@@ -16,12 +49,14 @@ const SignIn: React.FC = () => {
               </label>
               <div className="mt-2">
                 <input
+                  {...register('cpf', { required: true })}
                   id="cpf"
                   name="cpf"
                   type="text"
                   autoComplete="cpf"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.cpf?.message && <HelperText type="error">{errors.cpf?.message}</HelperText>}
               </div>
             </div>
             <div className="col-span-full">
@@ -33,12 +68,16 @@ const SignIn: React.FC = () => {
               </label>
               <div className="mt-2">
                 <input
+                  {...register('password', { required: true })}
                   id="password"
                   name="password"
                   type="text"
                   autoComplete="password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.password?.message && (
+                  <HelperText type="error">{errors.password?.message}</HelperText>
+                )}
               </div>
             </div>
 

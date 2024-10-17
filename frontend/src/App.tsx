@@ -1,12 +1,15 @@
 import './App.css';
-// import GlobalStyle from './styles/global';
+import { AuthProvider } from './hooks/auth';
+import 'rsuite/dist/rsuite.min.css';
+
 import Rotas from './routes';
 
 function App() {
   return (
     <>
-      <Rotas />
-      {/* <GlobalStyle /> */}
+      <AuthProvider>
+        <Rotas />
+      </AuthProvider>
     </>
   );
 }
