@@ -4,9 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
-  constructor(
-    private prisma: PrismaService
-  ) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(data: CreateProductDto, idUser: number) {
     const products = this.prisma.product.create({
@@ -16,9 +14,9 @@ export class ProductService {
         price: data.price,
         qty: data.qty,
         user: {
-          connect: { id: idUser }
-        }
-      }
+          connect: { id: idUser },
+        },
+      },
     });
     return products;
   }
@@ -46,7 +44,10 @@ export class ProductService {
       },
     });
 
-    if(Number(productExists.userId) !== Number(idUser) && productBelongsUser.role === 'common'){
+    if (
+      Number(productExists.userId) !== Number(idUser) &&
+      productBelongsUser.role === 'common'
+    ) {
       throw new Error('propuct does not belongs to user!');
     }
 
@@ -75,7 +76,10 @@ export class ProductService {
       },
     });
 
-    if(Number(productExists.userId) !== Number(idUser) && productBelongsUser.role === 'common'){
+    if (
+      Number(productExists.userId) !== Number(idUser) &&
+      productBelongsUser.role === 'common'
+    ) {
       throw new Error('propuct does not belongs to user!');
     }
 
@@ -88,6 +92,5 @@ export class ProductService {
         id: Number(id),
       },
     });
-
   }
 }

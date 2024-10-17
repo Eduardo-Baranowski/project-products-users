@@ -1,10 +1,9 @@
-import { $Enums } from "@prisma/client";
+import { $Enums } from '@prisma/client';
 
 export class CreateUserDto {
   cpf: string;
   password: string;
 }
-
 
 export class UserDto {
   id: number;
@@ -12,5 +11,5 @@ export class UserDto {
   password: string;
   role: $Enums.Role;
   createdAt: Date;
-  updatedAt: Date
+  updatedAt: Date;
 }

@@ -1,28 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-usuario.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
-import {
-  IRequestLoginUser,
-} from './interfaces/requests.interfaces';
+import { IRequestLoginUser } from './interfaces/requests.interfaces';
 import { Public } from '../auth/decorators/public.decorator';
 
-@ApiTags('Usuário')
-@Controller('usuario')
+@ApiTags('User')
+@Controller('user')
 export class UserController {
   constructor(private readonly usuariosService: UserService) {}
 
   @Public()
   @Post('create')
   @ApiOperation({
-    summary: 'Novo usuario',
-    description: 'Cria um novo usuario para o sistema',
+    summary: 'New user',
+    description: 'Create a new user for the system',
   })
   @ApiBody({ type: CreateUserDto })
   create(@Body() createUserioDto: CreateUserDto) {
@@ -30,19 +23,20 @@ export class UserController {
   }
 
   @Get('list')
+  @ApiOperation({
+    summary: 'List users',
+    description: 'List users for the system',
+  })
   findAll() {
     return this.usuariosService.findAll();
   }
 
-  @Get('encontrar/:id')
-  @ApiResponse({
-    status: 201,
-    description: 'usuario encontrado com sucesso.',
-  })
-
-
   @Public()
   @Post('login')
+  @ApiOperation({
+    summary: 'Login user',
+    description: 'Signin user in the system',
+  })
   login(@Body() body: IRequestLoginUser) {
     const { cpf, password } = body;
     return this.usuariosService.login(cpf, password);
