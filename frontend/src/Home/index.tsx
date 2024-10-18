@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Pagination, Button } from 'rsuite';
 import api from '../services/api';
 import PlusIcon from '@rsuite/icons/Plus';
+import MinusIcon from '@rsuite/icons/Minus';
 import { TrashIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
 import { formatDate, money } from '../utils';
 import Header from '../components/Header';
@@ -11,7 +12,7 @@ const { Column, HeaderCell, Cell } = Table;
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { ContainerForm, HelperText } from './styles';
+import { ButtonSteper, ContainerForm, ContainerSteeper, DivNumber, HelperText } from './styles';
 import { toast, ToastContainer } from 'react-toastify';
 import ModalDelete from '../components/ModalDelete';
 
@@ -28,20 +29,21 @@ type IProductProps = {
 const schema = yup.object().shape({
   name: yup.string().required('Por  favor, digite o nome do produto!'),
   price: yup.string().required('Por  favor, digite o valor do produto!'),
-  qty: yup.string().required('Por  favor, digite a quantidade!'),
+  // qty: yup.string().required('Por  favor, digite a quantidade!'),
   createdAt: yup.string().required('Por  favor, forneça a data de cadastro!'),
 });
 
 const Home: React.FC = () => {
-  const [limit, setLimit] = React.useState(10);
-  const [page, setPage] = React.useState(1);
-  const [id, setId] = React.useState(0);
-  const [name, setName] = React.useState('');
-  const [price, setPrice] = React.useState(0);
-  const [qty, setQty] = React.useState(0);
-  const [createdAt, setCreatedAt] = React.useState<Date>();
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [id, setId] = useState(0);
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [createdAt, setCreatedAt] = useState<Date>();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [disbledForm, setDisabledForm] = useState(true);
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -86,43 +88,49 @@ const Home: React.FC = () => {
     }
   };
 
+  function handleDisabledSubmit() {
+    return null;
+  }
+
   const onSubmitHandler = handleSubmit(async (data: any) => {
     try {
-      if (id > 0) {
-        const selectedDate = new Date(data.createdAt);
-        selectedDate.setDate(selectedDate.getDate() + 1);
+      if (disbledForm === false) {
+        if (id > 0) {
+          const selectedDate = new Date(data.createdAt);
+          selectedDate.setDate(selectedDate.getDate() + 1);
 
-        await api.patch(`/product/${id}`, {
-          name: data.name,
-          description: data.name,
-          price: Number(data.price),
-          qty: Number(data.qty),
-          createdAt: selectedDate,
-        });
-        reset({
-          createdAt: undefined,
-        });
-        reset();
-        setOpen(false);
-        atualizar();
-        toast.success('Produto atualizado com sucesso');
-        setCreatedAt(undefined);
-      } else {
-        await api.post('/product/create', {
-          name: data.name,
-          description: data.name,
-          price: Number(data.price),
-          qty: Number(data.qty),
-          createdAt: data.createdAt,
-        });
-        reset({
-          createdAt: undefined,
-        });
-        reset();
-        setOpen(false);
-        atualizar();
-        toast.success('Produto criado com sucesso');
+          await api.patch(`/product/${id}`, {
+            name: data.name,
+            description: data.name,
+            price: Number(data.price),
+            qty: qty,
+            createdAt: selectedDate,
+          });
+          reset({
+            createdAt: undefined,
+          });
+          reset();
+          setOpen(false);
+          atualizar();
+          toast.success('Produto atualizado com sucesso');
+        } else {
+          await api.post('/product/create', {
+            name: data.name,
+            description: data.name,
+            price: Number(data.price),
+            qty: qty,
+            createdAt: data.createdAt,
+          });
+          reset({
+            createdAt: undefined,
+          });
+          reset();
+          setOpen(false);
+          atualizar();
+          toast.success('Produto criado com sucesso');
+        }
       }
+      setDisabledForm(false);
     } catch (error) {
       toast.error('Não foi possível cadastrar o produto');
     }
@@ -138,6 +146,16 @@ const Home: React.FC = () => {
     const end = start + limit;
     return i >= start && i < end;
   });
+
+  function handleMinus() {
+    const qtyNew = qty - 1;
+    setQty(qtyNew);
+  }
+
+  function handlePlus() {
+    const qtyNew = qty + 1;
+    setQty(qtyNew);
+  }
 
   useEffect(() => {
     atualizar();
@@ -161,9 +179,10 @@ const Home: React.FC = () => {
               setId(0);
               setName('');
               setPrice(0);
-              setCreatedAt(undefined);
-              setQty(0);
+              setCreatedAt(new Date());
+              setQty(1);
               setOpen(true);
+              reset();
             }}
           >
             Cadastrar Produto
@@ -351,26 +370,44 @@ const Home: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="col-span-full">
+                <div className="col-span-full" onSubmit={() => handleDisabledSubmit()}>
                   <label
                     htmlFor="qty"
                     className="block text-sm font-medium leading-6 text-gray-900"
+                    onSubmit={() => handleDisabledSubmit()}
                   >
                     Quantidade
                   </label>
-                  <div className="mt-2">
-                    <input
-                      {...register('qty', { required: true })}
-                      id="qty"
-                      name="qty"
-                      value={qty}
-                      onChange={e => setQty(Number(e.target.value))}
-                      type="text"
-                      className="block px-2 w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                    {errors.qty?.message && (
-                      <HelperText type="error">{errors.qty?.message}</HelperText>
-                    )}
+                  <div
+                    className="block mt-2 px-2 w-24 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-[#2c7474] placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    id="qty"
+                    onSubmit={() => handleDisabledSubmit()}
+                  >
+                    <ContainerSteeper onSubmit={() => handleDisabledSubmit()}>
+                      <ButtonSteper onSubmit={() => handleDisabledSubmit()}>
+                        <MinusIcon
+                          color="#2c7474"
+                          onSubmit={() => handleDisabledSubmit()}
+                          onClick={() => {
+                            if (qty > 1) {
+                              setDisabledForm(true);
+                              handleMinus();
+                            }
+                          }}
+                        />
+                      </ButtonSteper>
+                      <DivNumber onSubmit={() => handleDisabledSubmit()}>{qty}</DivNumber>
+                      <ButtonSteper onSubmit={() => handleDisabledSubmit()}>
+                        <PlusIcon
+                          color="#2c7474"
+                          onSubmit={() => handleDisabledSubmit()}
+                          onClick={() => {
+                            setDisabledForm(true);
+                            handlePlus();
+                          }}
+                        />
+                      </ButtonSteper>
+                    </ContainerSteeper>
                   </div>
                 </div>
               </div>

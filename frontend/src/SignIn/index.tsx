@@ -40,7 +40,7 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <ContainerTxai>
-        <div>
+        <div className="mr-5 ml-5">
           <div>
             <div className="flex justify-end items-end">
               <h2 className="flex mb-5 text-center font-semibold leading-10 text-white">
@@ -55,7 +55,7 @@ const SignIn: React.FC = () => {
               type="submit"
               style={{
                 backgroundColor: '#569090',
-                width: 330,
+                width: '60%',
               }}
               className="rounded-md  px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible  :outline-indigo-600"
             >
@@ -65,7 +65,7 @@ const SignIn: React.FC = () => {
         </div>
       </ContainerTxai>
       <ContainerForm>
-        <form onSubmit={onSubmitHandler}>
+        <form onSubmit={onSubmitHandler} className="mr-5 ml-5">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
             <h2 className="text-base font-semibold leading-7 text-gray-900">Login</h2>
 
@@ -137,7 +137,7 @@ const SignIn: React.FC = () => {
             </div>
           </div>
         </form>
-        <div className="flex mt-6 justify-center">
+        <div className="flex mt-6 justify-center mr-5 ml-5">
           <div className="relative flex gap-x-3 mr-5">
             <div className="text-sm leading-6">
               <label htmlFor="comments" className="font-medium text-gray-900">
@@ -161,7 +161,7 @@ const SignIn: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex mt-20 justify-center">
+        <div className="flex mt-20 justify-center mr-5 ml-5">
           <div className="relative flex gap-x-3 mr-1">
             <div className="text-sm leading-6">
               <label htmlFor="comments" className="font-medium text-gray-900">
