@@ -9,8 +9,9 @@ export const ContainerTxai = styled.div`
   display: flex;
   width: 50%;
   justify-content: center;
-  flex-direction: row;
-  background-color: #2e7070;
+  align-items: center;
+  flex-direction: column;
+  background-color: #2e7171;
 `;
 
 export const ContainerForm = styled.div`
@@ -18,6 +19,7 @@ export const ContainerForm = styled.div`
   width: 50%;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 `;
 
 type ErrorProps = {

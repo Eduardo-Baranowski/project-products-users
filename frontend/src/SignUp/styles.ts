@@ -1,8 +1,23 @@
 import { styled } from 'styled-components';
 
+export const Container = styled.div`
+  display: flex;
+  height: 100vh;
+  background-color: #f8f8f8;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ContainerTxai = styled.div`
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  flex-direction: row;
+  background-color: #f8f8f8;
+`;
+
 export const ContainerForm = styled.div`
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
 `;

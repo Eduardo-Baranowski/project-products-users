@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '../hooks/auth';
 import { toast, ToastContainer } from 'react-toastify';
+import logoImg from '../assets/logo-txai.svg';
 
 const schema = yup.object().shape({
   cpf: yup.string().required('Por  favor, digite o CPF do usuário!'),
@@ -38,7 +39,31 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
-      <ContainerTxai></ContainerTxai>
+      <ContainerTxai>
+        <div>
+          <div>
+            <div className="flex justify-end items-end">
+              <h2 className="flex mb-5 text-center font-semibold leading-10 text-white">
+                Bem-Vindo
+              </h2>
+            </div>
+            <img alt="" src={logoImg} />
+          </div>
+          <div className="mt-16 flex items-center justify-start gap-x-6">
+            <button
+              onClick={onSubmitHandler}
+              type="submit"
+              style={{
+                backgroundColor: '#569090',
+                width: 330,
+              }}
+              className="rounded-md  px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible  :outline-indigo-600"
+            >
+              Entrar
+            </button>
+          </div>
+        </div>
+      </ContainerTxai>
       <ContainerForm>
         <form onSubmit={onSubmitHandler}>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
@@ -111,50 +136,47 @@ const SignIn: React.FC = () => {
               </div>
             </div>
           </div>
-
-          <div className="flex mt-6 justify-center">
-            <div className="relative flex gap-x-3 mr-5">
-              <div className="text-sm leading-6">
-                <label htmlFor="comments" className="font-medium text-gray-900">
-                  Não tem uma conta?
-                </label>
-              </div>
-            </div>
-            <div className="relative flex gap-x-3">
-              <div className="text-sm leading-6">
-                <label htmlFor="comments" className="font-medium text-gray-900">
-                  cadastre-se agora
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex mt-20 justify-center">
-            <div className="relative flex gap-x-3 mr-1">
-              <div className="text-sm leading-6">
-                <label htmlFor="comments" className="font-medium text-gray-900">
-                  Ajuda &#8226;
-                </label>
-              </div>
-            </div>
-            <div className="relative flex gap-x-3">
-              <div className="text-sm leading-6">
-                <label htmlFor="comments" className="font-medium text-gray-900">
-                  Política de privacidade
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button
-              type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Save
-            </button>
-          </div>
         </form>
+        <div className="flex mt-6 justify-center">
+          <div className="relative flex gap-x-3 mr-5">
+            <div className="text-sm leading-6">
+              <label htmlFor="comments" className="font-medium text-gray-900">
+                Não tem uma conta?
+              </label>
+            </div>
+          </div>
+          <div className="relative flex gap-x-3">
+            <div className="text-sm leading-6">
+              <button
+                onSubmit={() => {}}
+                style={{ color: '#2c7474' }}
+                className="font-medium text-gray-900"
+                onClick={() => {
+                  window.location.pathname = '/signup';
+                }}
+              >
+                cadastre-se agora
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex mt-20 justify-center">
+          <div className="relative flex gap-x-3 mr-1">
+            <div className="text-sm leading-6">
+              <label htmlFor="comments" className="font-medium text-gray-900">
+                Ajuda &#8226;
+              </label>
+            </div>
+          </div>
+          <div className="relative flex gap-x-3">
+            <div className="text-sm leading-6">
+              <label htmlFor="comments" className="font-medium text-gray-900">
+                Política de privacidade
+              </label>
+            </div>
+          </div>
+        </div>
       </ContainerForm>
       <ToastContainer autoClose={4000} position="top-right" theme="colored" closeOnClick />
     </Container>

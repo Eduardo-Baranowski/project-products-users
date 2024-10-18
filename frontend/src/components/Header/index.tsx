@@ -13,61 +13,30 @@ import {
   PopoverPanel,
 } from '@headlessui/react';
 import {
-  ArrowPathIcon,
   Bars3Icon,
   Bars4Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
+  ArrowLeftEndOnRectangleIcon,
   XMarkIcon,
   QuestionMarkCircleIcon,
   CalendarDaysIcon,
   BellIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import logoImg from '../../assets/logo.svg';
+import { useAuth } from '../../hooks/auth';
 
 const products = [
   {
-    name: 'Analytics',
-    description: 'Get a better understanding of your traffic',
+    name: 'Logout',
     href: '#',
-    icon: ChartPieIcon,
+    icon: ArrowLeftEndOnRectangleIcon,
   },
-  {
-    name: 'Engagement',
-    description: 'Speak directly to your customers',
-    href: '#',
-    icon: CursorArrowRaysIcon,
-  },
-  {
-    name: 'Security',
-    description: 'Your customers’ data will be safe and secure',
-    href: '#',
-    icon: FingerPrintIcon,
-  },
-  {
-    name: 'Integrations',
-    description: 'Connect with third-party tools',
-    href: '#',
-    icon: SquaresPlusIcon,
-  },
-  {
-    name: 'Automations',
-    description: 'Build strategic funnels that will convert',
-    href: '#',
-    icon: ArrowPathIcon,
-  },
-];
-const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { signOut } = useAuth();
 
   return (
     <header className="bg-white" style={{ backgroundColor: '#f8f8f8' }}>
@@ -77,7 +46,7 @@ export default function Header() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img alt="" src={logoImg} className="h-8 w-auto" />
+              <img alt="" src={logoImg} className="h-8 w-auto" style={{ color: '#373435' }} />
             </a>
           </div>
         </div>
@@ -103,6 +72,9 @@ export default function Header() {
                   {products.map(item => (
                     <div
                       key={item.name}
+                      onClick={() => {
+                        signOut();
+                      }}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
                     >
                       <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -116,21 +88,8 @@ export default function Header() {
                           {item.name}
                           <span className="absolute inset-0" />
                         </a>
-                        <p className="mt-1 text-gray-600">{item.description}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
-                  {callsToAction.map(item => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
-                    >
-                      <item.icon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
-                      {item.name}
-                    </a>
                   ))}
                 </div>
               </PopoverPanel>
@@ -217,7 +176,7 @@ export default function Header() {
                     />
                   </DisclosureButton>
                   <DisclosurePanel className="mt-2 space-y-2">
-                    {[...products, ...callsToAction].map(item => (
+                    {[...products].map(item => (
                       <DisclosureButton
                         key={item.name}
                         as="a"

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 
@@ -81,7 +81,10 @@ export class ProductService {
       Number(productExists.userId) !== Number(idUser) &&
       productBelongsUser.role === 'common'
     ) {
-      throw new Error('propuct does not belongs to user!');
+      throw new HttpException(
+        { message: 'propuct does not belongs to user!.' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     if (!productExists) {

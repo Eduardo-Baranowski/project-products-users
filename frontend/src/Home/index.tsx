@@ -77,8 +77,12 @@ const Home: React.FC = () => {
       setOpenDelete(false);
       atualizar();
       toast.success('Produto excluído com sucesso');
-    } catch (error) {
-      toast.error('Não foi possível remover o produto');
+    } catch (error: any) {
+      if (error.response.data.message === 'propuct does not belongs to user!.') {
+        toast.error('Produto não pertence ao usuário');
+      } else {
+        toast.error('Não foi possível remover o produto');
+      }
     }
   };
 
