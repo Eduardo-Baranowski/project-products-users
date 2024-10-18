@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { ContainerForm, HelperText } from './styles';
 import { toast, ToastContainer } from 'react-toastify';
+import ModalDelete from '../components/ModalDelete';
 
 type IProductProps = {
   id: string;
@@ -42,6 +43,7 @@ const Home: React.FC = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const {
     register,
@@ -67,6 +69,17 @@ const Home: React.FC = () => {
           complete = true;
         }
       });
+  };
+
+  const handleDelete = async (idProduct: number) => {
+    try {
+      await api.delete(`/product/${idProduct}`);
+      setOpenDelete(false);
+      atualizar();
+      toast.success('Produto excluído com sucesso');
+    } catch (error) {
+      toast.error('Não foi possível remover o produto');
+    }
   };
 
   const onSubmitHandler = handleSubmit(async (data: any) => {
@@ -240,6 +253,10 @@ const Home: React.FC = () => {
                       border: 'none',
                       outline: 'inherit',
                     }}
+                    onClick={() => {
+                      setId(Number(rowData.id));
+                      setOpenDelete(true);
+                    }}
                   >
                     <TrashIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
                   </Button>
@@ -379,6 +396,15 @@ const Home: React.FC = () => {
           </form>
         </ContainerForm>
       </Modal>
+
+      <ModalDelete
+        id={id}
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onPress={() => {
+          handleDelete(id);
+        }}
+      />
       <ToastContainer autoClose={4000} position="top-right" theme="colored" closeOnClick />
 
       <Footer />
