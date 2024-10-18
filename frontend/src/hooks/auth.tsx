@@ -3,6 +3,7 @@ import api from '../services/api';
 
 interface UserState {
   cpf: string;
+  username: string;
   id: string;
 }
 

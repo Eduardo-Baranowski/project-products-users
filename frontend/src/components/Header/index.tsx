@@ -36,7 +36,7 @@ const products = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   return (
     <header className="bg-white" style={{ backgroundColor: '#f8f8f8' }}>
@@ -130,7 +130,7 @@ export default function Header() {
                     color: '#252e2e',
                   }}
                 />
-                Product
+                {user.username}
                 <ChevronDownIcon
                   aria-hidden="true"
                   className="h-5 w-5 flex-none text-gray-400"
