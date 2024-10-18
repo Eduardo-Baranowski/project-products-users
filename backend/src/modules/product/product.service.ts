@@ -55,6 +55,7 @@ export class ProductService {
       throw new Error('propuct does not exists!');
     }
 
+    console.log(data);
     return await this.prisma.product.update({
       data,
       where: {

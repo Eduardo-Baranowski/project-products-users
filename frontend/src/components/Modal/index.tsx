@@ -10,6 +10,7 @@ type Props = {
   onPress: () => void;
   title: string;
   titleButton: string;
+  id?: number;
 };
 
 export default function Modal({ children, open, onClose, title, titleButton, onPress }: Props) {
@@ -43,6 +44,7 @@ export default function Modal({ children, open, onClose, title, titleButton, onP
               <button
                 type="button"
                 onClick={onPress}
+                style={{ backgroundColor: '#2c7474' }}
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
               >
                 {titleButton}

@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '../hooks/auth';
+import { toast, ToastContainer } from 'react-toastify';
 
 const schema = yup.object().shape({
   cpf: yup.string().required('Por  favor, digite o CPF do usuário!'),
@@ -29,9 +30,9 @@ const SignIn: React.FC = () => {
       });
       window.location.pathname = '/home';
       reset();
-      console.log('Login realizado com sucesso');
+      toast.success('Login realizado com sucesso');
     } catch (error) {
-      console.log('Não foi possível realizar o login');
+      toast.error('Não foi possível realizar o login');
     }
   });
 
@@ -54,7 +55,7 @@ const SignIn: React.FC = () => {
                   name="cpf"
                   type="text"
                   autoComplete="cpf"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block px-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.cpf?.message && <HelperText type="error">{errors.cpf?.message}</HelperText>}
               </div>
@@ -73,7 +74,7 @@ const SignIn: React.FC = () => {
                   name="password"
                   type="text"
                   autoComplete="password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block px-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password?.message && (
                   <HelperText type="error">{errors.password?.message}</HelperText>
@@ -155,6 +156,7 @@ const SignIn: React.FC = () => {
           </div>
         </form>
       </ContainerForm>
+      <ToastContainer autoClose={4000} position="top-right" theme="colored" closeOnClick />
     </Container>
   );
 };
