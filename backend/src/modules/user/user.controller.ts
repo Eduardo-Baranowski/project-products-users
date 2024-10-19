@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  UploadedFiles,
   UseInterceptors,
   Req,
   Param,
@@ -14,11 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
 import { Public } from '../auth/decorators/public.decorator';
-import { IRequestUploadPhotoUser } from './interfaces/requests.interfaces';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
 @Controller('user')

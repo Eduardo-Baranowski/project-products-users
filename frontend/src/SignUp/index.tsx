@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, ContainerForm, HelperText } from './styles';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -7,6 +7,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import api from '../services/api';
 import { Button } from 'rsuite';
 import PlusIcon from '@rsuite/icons/ArowBack';
+import CamIcon from '@rsuite/icons/Image';
+//import { UserCircleIcon } from '@heroicons/react/24/solid';
 
 const schema = yup.object().shape({
   cpf: yup.string().required('Por  favor, digite o CPF do usuário!'),
@@ -18,6 +20,9 @@ const schema = yup.object().shape({
 });
 
 const SignUp: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [image, setImage] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -27,16 +32,35 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
+  const handleImageUpload = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.files != null) {
+      setImage(URL.createObjectURL(evt.target.files[0]));
+      setFile(evt.target.files[0]);
+    }
+  };
+
   const onSubmitHandler = handleSubmit(async (data: any) => {
     try {
       if (data.password === data.passwordConfirm) {
-        await api.post('/user/create', {
-          cpf: data.cpf,
-          password: data.password,
-          name: data.name,
-          username: data.username,
-          email: data.email,
-        });
+        await api
+          .post('/user/create', {
+            cpf: data.cpf,
+            password: data.password,
+            name: data.name,
+            username: data.username,
+            email: data.email,
+          })
+          .then(async item => {
+            const dataForm: any = new FormData();
+
+            dataForm.append('file', file);
+
+            await api.post(`/user/uploadImage/${item.data.id}`, dataForm, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          });
 
         reset();
       } else {
@@ -53,12 +77,41 @@ const SignUp: React.FC = () => {
       <ContainerForm>
         <form onSubmit={onSubmitHandler}>
           <div className="pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Personal Information
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Use a permanent address where you can receive mail.
-            </p>
+            <h2 className="text-base font-semibold leading-7 text-gray-900">Faça seu cadastro</h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">*Campos obrigatórios</p>
+
+            <div className="col-span-full mt-5">
+              <div className="mt-2 flex items-center gap-x-3">
+                {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300 mr-0" /> */}
+                {image ? (
+                  <img src={image} className="h-14 w-14 rounded-full" />
+                ) : (
+                  <div className="h-14 w-14 rounded-full" style={{ backgroundColor: '#2988ef' }} />
+                )}
+
+                <div className="col-span-full absolute ml-8 mt-4">
+                  <div className="text-center">
+                    <div className="mt-4 flex text-sm text-gray-600">
+                      <label
+                        htmlFor="file"
+                        className="relative cursor-pointer rounded-full pr-1 pl-1 justify-center, items-center bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                      >
+                        <CamIcon style={{ width: 10, height: 10 }}>Upload a file</CamIcon>
+                        <input
+                          id="file"
+                          onChange={e => {
+                            handleImageUpload(e);
+                          }}
+                          name="file"
+                          type="file"
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-12">
               <div className="sm:col-span-4">
