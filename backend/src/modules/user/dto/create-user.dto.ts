@@ -14,6 +14,15 @@ export class UserDto {
   cpf: string;
   password: string;
   role: $Enums.Role;
+  image: string;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type FileDto = {
+  buffer: Buffer;
+  filename: string;
+  mimetype: string;
+  originalname: string;
+  size: number;
+};

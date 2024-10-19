@@ -8,3 +8,7 @@ export interface IRequestLoginUserPayload {
   cpf: string;
   password: string;
 }
+
+export interface IRequestUploadPhotoUser {
+  id: string;
+}

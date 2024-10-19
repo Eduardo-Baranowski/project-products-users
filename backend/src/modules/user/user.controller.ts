@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UploadedFiles,
+  UseInterceptors,
+  Req,
+  Param,
+  UploadedFile,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
 import { Public } from '../auth/decorators/public.decorator';
+import { IRequestUploadPhotoUser } from './interfaces/requests.interfaces';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 
 @ApiTags('User')
 @Controller('user')
@@ -28,5 +43,20 @@ export class UserController {
   })
   findAll() {
     return this.usuariosService.findAll();
+  }
+
+  @Post('uploadImage/:id')
+  @ApiOperation({
+    summary: 'Upload image',
+    description: 'Upload image user in the system',
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  updatePhoto(
+    @Param('id') id: number,
+    @UploadedFile() file,
+    @Req()
+    req,
+  ) {
+    return this.usuariosService.updatePhoto(req.file, Number(id));
   }
 }
