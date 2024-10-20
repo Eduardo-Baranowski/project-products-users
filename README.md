@@ -3,7 +3,7 @@
   npm install
   npx prisma migrate dev
   npx prisma db seed
-  npm run star:dev
+  npm run start:dev
 
   link do swagger: http://localhost:3333/api
   obs: no arquivo env.example mostra como as variáveis devem ser.
