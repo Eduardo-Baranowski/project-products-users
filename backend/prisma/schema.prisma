@@ -14,8 +14,9 @@ datasource db {
 }
 
 enum Role {
-  admin  @map("admin")
-  common @map("common")
+  admin       @map("admin")
+  common      @map("common")
+  development @map("development")
 
   @@map("roles")
 }

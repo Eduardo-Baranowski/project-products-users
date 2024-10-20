@@ -12,4 +12,7 @@
   npm install
   npm start
 
+  link da vercel: https://project-products-users.vercel.app/
+
   obs: no arquivo /src/services/api está a url que deve ser recebida da api.
+  obs: como a api não está em produção não é possível passar da tela de login na vercel.

@@ -22,6 +22,7 @@ const schema = yup.object().shape({
 const SignUp: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState('');
+  const [role, setRole] = useState('');
 
   const {
     register,
@@ -31,6 +32,8 @@ const SignUp: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  console.log(role);
 
   const handleImageUpload = (evt: React.ChangeEvent<HTMLInputElement>) => {
     if (evt.target.files != null) {
@@ -49,6 +52,7 @@ const SignUp: React.FC = () => {
             name: data.name,
             username: data.username,
             email: data.email,
+            role: role,
           })
           .then(async item => {
             const dataForm: any = new FormData();
@@ -252,9 +256,11 @@ const SignUp: React.FC = () => {
                     id="role"
                     name="role"
                     autoComplete=""
+                    onChange={e => setRole(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option>Comum</option>
+                    <option>common</option>
+                    <option>development</option>
                   </select>
                 </div>
               </div>
@@ -262,16 +268,6 @@ const SignUp: React.FC = () => {
           </div>
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
-            {/* <button
-              type="button"
-              data-autofocus
-              onClick={() => {
-                window.location.pathname = '/';
-              }}
-              className="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-            >
-              Voltar ao Login
-            </button> */}
             <Button
               style={{ backgroundColor: '#fff', color: '#8d9494' }}
               startIcon={<PlusIcon color="#8d9494 " />}
