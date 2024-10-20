@@ -1,5 +1,14 @@
-export interface IRequestLoginUser {
+import { ApiProperty } from '@nestjs/swagger';
+
+export class IRequestLoginUser {
+  @ApiProperty({
+    description: 'CPF',
+  })
   cpf: string;
+
+  @ApiProperty({
+    description: 'password',
+  })
   password: string;
 }
 

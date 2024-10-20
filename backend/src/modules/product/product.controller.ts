@@ -10,11 +10,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
 import { AuthGuard } from '@nestjs/passport';
 
+@ApiBearerAuth()
 @ApiTags('Product')
 @Controller('product')
 export class ProductController {
@@ -26,19 +34,26 @@ export class ProductController {
     summary: 'New product',
     description: 'Create a new product for the system',
   })
-  @ApiBody({ type: CreateProductDto })
   create(@Req() req, @Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto, req.user.userId);
   }
 
-  @Get('list')
-  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'List products',
     description: 'List products for the system',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Success.',
+  })
+  @ApiQuery({
+    name: 'order',
+    description: 'asc or desc',
+    required: false,
+  })
+  @Get('list')
+  @UseGuards(AuthGuard('jwt'))
   findAll(@Req() req) {
-    console.log(req.query);
     return this.productService.findAll(req.query.order, req.query.dataOrder);
   }
 
@@ -47,6 +62,10 @@ export class ProductController {
   @ApiOperation({
     summary: 'Update product',
     description: 'Update product in the system',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Success.',
   })
   async update(
     @Param('id') id: number,
@@ -61,6 +80,10 @@ export class ProductController {
   @ApiOperation({
     summary: 'Delete product',
     description: 'Delete product in the system',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Success.',
   })
   remove(@Param('id') id: number, @Req() req) {
     return this.productService.remove(id, req.user.userId);

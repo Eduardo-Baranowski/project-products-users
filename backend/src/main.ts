@@ -10,8 +10,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Products and Users')
-    .setDescription('The API description')
+    .setDescription('The API Txai')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

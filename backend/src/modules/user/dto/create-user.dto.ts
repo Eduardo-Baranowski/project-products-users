@@ -1,11 +1,35 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
 
 export class CreateUserDto {
+  @ApiProperty({
+    description: 'CPF',
+  })
   cpf: string;
+
+  @ApiProperty({
+    description: 'Senha',
+  })
   password: string;
+
+  @ApiProperty({
+    description: 'Tipo de usuário',
+  })
   role: $Enums.Role;
+
+  @ApiProperty({
+    description: 'Nome completo',
+  })
   name: string;
+
+  @ApiProperty({
+    description: 'Nome de usuário',
+  })
   username: string;
+
+  @ApiProperty({
+    description: 'Email',
+  })
   email: string;
 }
 
