@@ -7,6 +7,8 @@ import {
   Req,
   Param,
   UploadedFile,
+  UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -14,6 +16,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 import { Public } from '../auth/decorators/public.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('User')
 @Controller('user')
@@ -53,5 +56,19 @@ export class UserController {
     req,
   ) {
     return this.usuariosService.updatePhoto(req.file, Number(id));
+  }
+
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    summary: 'Update user',
+    description: 'Update user in the system',
+  })
+  async update(
+    @Param('id') id: number,
+    @Req() req,
+    @Body() data: CreateUserDto,
+  ) {
+    return this.usuariosService.update(id, data, req.user.userId);
   }
 }

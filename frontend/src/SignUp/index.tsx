@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, ContainerForm, HelperText } from './styles';
+import { Container, ContainerForm, ContainerLogo, HelperText } from './styles';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,7 +8,7 @@ import api from '../services/api';
 import { Button } from 'rsuite';
 import PlusIcon from '@rsuite/icons/ArowBack';
 import CamIcon from '@rsuite/icons/Image';
-//import { UserCircleIcon } from '@heroicons/react/24/solid';
+import logoImg from '../assets/logo-txai-2.svg';
 
 const schema = yup.object().shape({
   cpf: yup.string().required('Por  favor, digite o CPF do usuário!'),
@@ -60,6 +60,7 @@ const SignUp: React.FC = () => {
                 'Content-Type': 'multipart/form-data',
               },
             });
+            setImage('');
           });
 
         reset();
@@ -76,13 +77,15 @@ const SignUp: React.FC = () => {
     <Container>
       <ContainerForm>
         <form onSubmit={onSubmitHandler}>
+          <ContainerLogo>
+            <img alt="" src={logoImg} className="pr-10" />
+          </ContainerLogo>
           <div className="pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Faça seu cadastro</h2>
+            <h2 className="mt-10">Faça seu cadastro</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">*Campos obrigatórios</p>
 
             <div className="col-span-full mt-5">
               <div className="mt-2 flex items-center gap-x-3">
-                {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300 mr-0" /> */}
                 {image ? (
                   <img src={image} className="h-14 w-14 rounded-full" />
                 ) : (
@@ -91,7 +94,7 @@ const SignUp: React.FC = () => {
 
                 <div className="col-span-full absolute ml-8 mt-4">
                   <div className="text-center">
-                    <div className="mt-4 flex text-sm text-gray-600">
+                    <div className="mt-6 flex text-sm text-gray-600">
                       <label
                         htmlFor="file"
                         className="relative cursor-pointer rounded-full pr-1 pl-1 justify-center, items-center bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -107,6 +110,7 @@ const SignUp: React.FC = () => {
                           className="sr-only"
                         />
                       </label>
+                      <p className="ml-2 text-[#2c7474]">Carregar foto</p>
                     </div>
                   </div>
                 </div>

@@ -3,7 +3,7 @@ import { Table, Pagination, Button } from 'rsuite';
 import api from '../services/api';
 import PlusIcon from '@rsuite/icons/Plus';
 import MinusIcon from '@rsuite/icons/Minus';
-import { TrashIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
+import { TrashIcon, Cog6ToothIcon, HomeIcon } from '@heroicons/react/24/solid';
 import { formatDate, money } from '../utils';
 import Header from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form';
 import { ButtonSteper, ContainerForm, ContainerSteeper, DivNumber, HelperText } from './styles';
 import { toast, ToastContainer } from 'react-toastify';
 import ModalDelete from '../components/ModalDelete';
+import { RiSortAlphabetDesc } from 'react-icons/ri';
+import { HiOutlineSortAscending } from 'react-icons/hi';
 
 type IProductProps = {
   id: string;
@@ -29,13 +31,13 @@ type IProductProps = {
 const schema = yup.object().shape({
   name: yup.string().required('Por  favor, digite o nome do produto!'),
   price: yup.string().required('Por  favor, digite o valor do produto!'),
-  // qty: yup.string().required('Por  favor, digite a quantidade!'),
   createdAt: yup.string().required('Por  favor, forneça a data de cadastro!'),
 });
 
 const Home: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState('asc');
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
@@ -71,6 +73,52 @@ const Home: React.FC = () => {
           complete = true;
         }
       });
+  };
+
+  const listOrder = async (dataOrder?: string) => {
+    let complete = false;
+    if (dataOrder) {
+      api
+        .get(`/product/list`, {
+          params: {
+            dataOrder,
+          },
+        })
+        .then(res => {
+          setProducts(res.data);
+        })
+        .finally(() => {
+          setLoading(false);
+          if (complete) {
+            setLoading(false);
+          } else {
+            complete = true;
+          }
+        });
+    } else {
+      api
+        .get(`/product/list`, {
+          params: {
+            order,
+          },
+        })
+        .then(res => {
+          setProducts(res.data);
+        })
+        .finally(() => {
+          if (order === 'asc') {
+            setOrder('desc');
+          } else {
+            setOrder('asc');
+          }
+          setLoading(false);
+          if (complete) {
+            setLoading(false);
+          } else {
+            complete = true;
+          }
+        });
+    }
   };
 
   const handleDelete = async (idProduct: number) => {
@@ -165,6 +213,24 @@ const Home: React.FC = () => {
     <>
       <Header />
       <div>
+        <div className="flex-row flex mt-10 mb-10 bg-[#f5f5f5] w-1/4">
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4 h-12">
+            <HomeIcon
+              aria-hidden="true"
+              className="h-5 w-5 flex-none  text-gray-400 ml-10"
+              style={{
+                color: '#8d9494',
+              }}
+            />
+            Home &nbsp;/
+          </view>
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4">
+            Gestão &nbsp;/
+          </view>
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#2c7474] mr-4">
+            Controle de Estoque
+          </view>
+        </div>
         <div
           className="mt-0 w-80 flex justify-center align-center border-blue-gray-50 border-b-8"
           style={{ borderColor: '#2c7474' }}
@@ -187,6 +253,34 @@ const Home: React.FC = () => {
           >
             Cadastrar Produto
           </Button>
+        </div>
+        <div className="flex mt-6 justify-start mr-5 ml-16">
+          <div className="relative flex gap-x-3 mr-5">
+            <div className="text-sm leading-6 flex-row flex justify-center items-center">
+              <a
+                className="font-medium text-gray-900 text-decoration-line: underline mr-1 "
+                onClick={() => {
+                  listOrder('dataOrder');
+                }}
+              >
+                Mais recentes primeiro
+              </a>
+              <HiOutlineSortAscending />
+            </div>
+          </div>
+          <div className="relative flex gap-x-3">
+            <div className="text-sm leading-6 flex-row flex justify-center items-center">
+              <a
+                className="font-medium text-gray-900 text-decoration-line: underline mr-1"
+                onClick={() => {
+                  listOrder();
+                }}
+              >
+                De A a Z
+              </a>
+              <RiSortAlphabetDesc />
+            </div>
+          </div>
         </div>
         <div style={{ padding: 20, marginLeft: 70, marginRight: 70 }}>
           <Pagination

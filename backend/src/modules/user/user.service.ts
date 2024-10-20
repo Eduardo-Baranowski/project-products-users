@@ -112,14 +112,35 @@ export class UserService {
         id: Number(id),
       },
     });
-    // await this.prisma.user
-    //   .createQueryBuilder()
-    //   .update()
-    //   .set({
-    //     imagem: destiny_image,
-    //   })
-    //   .where('id = :id', { id })
-    //   .execute();
     return this.prisma.user.findFirst({ where: { id: Number(id) } });
+  }
+
+  async update(id: number, data: CreateUserDto, idUser: number) {
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    const userIsUser = await this.prisma.user.findUnique({
+      where: {
+        id: Number(idUser),
+      },
+    });
+
+    if (userIsUser.role !== 'admin') {
+      throw new HttpException('Usuário não é admin', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!userExists) {
+      throw new Error('propuct does not exists!');
+    }
+
+    return await this.prisma.user.update({
+      data,
+      where: {
+        id: Number(id),
+      },
+    });
   }
 }

@@ -37,8 +37,9 @@ export class ProductController {
     summary: 'List products',
     description: 'List products for the system',
   })
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Req() req) {
+    console.log(req.query);
+    return this.productService.findAll(req.query.order, req.query.dataOrder);
   }
 
   @Patch(':id')

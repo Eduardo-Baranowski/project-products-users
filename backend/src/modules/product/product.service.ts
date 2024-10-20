@@ -21,8 +21,19 @@ export class ProductService {
     return products;
   }
 
-  async findAll() {
-    return this.prisma.product.findMany();
+  async findAll(order: 'desc' | 'asc', dataOrder: string) {
+    if (dataOrder) {
+      return this.prisma.product.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    }
+    return this.prisma.product.findMany({
+      orderBy: {
+        name: order,
+      },
+    });
   }
 
   async findOne(id: number) {

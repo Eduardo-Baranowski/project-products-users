@@ -6,6 +6,12 @@ export const Container = styled.div`
   background-color: #f8f8f8;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+`;
+
+export const ContainerLogo = styled.div`
+  display: flex;
+  margin-left: -5px;
 `;
 
 export const ContainerTxai = styled.div`
