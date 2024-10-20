@@ -213,8 +213,8 @@ const Home: React.FC = () => {
     <>
       <Header />
       <div>
-        <div className="flex-row flex mt-10 mb-10 bg-[#f5f5f5] w-1/4">
-          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4 h-12">
+        <div className="flex-row flex mt-10 mb-10 bg-[#f5f5f5] max-w-xl flex-1">
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4 h-12 ">
             <HomeIcon
               aria-hidden="true"
               className="h-5 w-5 flex-none  text-gray-400 ml-10"
@@ -224,10 +224,10 @@ const Home: React.FC = () => {
             />
             Home &nbsp;/
           </view>
-          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4">
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#8d9494] mr-4 ">
             Gestão &nbsp;/
           </view>
-          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#2c7474] mr-4">
+          <view className="flex items-center gap-x-1 text-lg font-semibold leading-6 text-[#2c7474] mr-4 ">
             Controle de Estoque
           </view>
         </div>

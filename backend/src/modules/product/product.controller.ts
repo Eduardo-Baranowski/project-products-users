@@ -12,7 +12,6 @@ import {
 
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
   ApiQuery,
   ApiResponse,
